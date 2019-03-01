@@ -2,51 +2,48 @@
 
 go语言操作json包
 
-[![Build Status](https://secure.travis-ci.org/bitly/go-simplejson.png)](http://travis-ci.org/bitly/go-simplejson)
-
-### 导入包
-
-    import github.com/qq1060656096/go-simplejson
-
 ### 文档
 
-### 解析json字符串
+### 1. 字符串解析成json, 并获取值
 ```go
+package main
+
 import (
-	"github.com/qq1060656096/go-simplejson"
 	"fmt"
+	"github.com/qq1060656096/go-simplejson"
 )
 
-body := `
+func main() {
+	jsonStr := `
 {
-	"id": 10,
-	"name": "test4",
-	"age": 18,
-	"address": {
-		"country": "中国",
-		"city": "成都"
-	},
-	"mobile": [
-		"15400012301",
-		"15400012302",
-		15400012303
-	]
+	"uid": 1,
+	"name": "tester1",
+	"pass": "123456",
+	"profile": {
+		"age": 18,
+		"weight": "75kg",
+		"height": "1.71m",
+		"mobile": [
+			15400000001,
+			15400000002
+		]
+	}
 }
 `
-// json字符解析
-j, err := NewJson([]byte(body))
-// 获取json对象值
-v, err := j.Get("name").String()
+	// 字符串解析成json对象
+	j, err := simplejson.NewJson([]byte(jsonStr))
 
-// 获取json对象值,连贯操作
-v, err := j.Get("address").Get("city").String()
-fmt.printf("%s", v)// 成都
+	// 简单获取值, 并转换成string类型
+	nameValue, err := j.Get("name").String()
+	fmt.Println(err)
+	fmt.Println(nameValue) // 输出: tester1
 
-// 获取json对象值
-v, err := j.Get("name").String()
-fmt.printf("%s", v)// test4
+	// 连贯操作获取子级键的值, 并转换成int类型
+	ageValue, err := j.Get("profile").Get("age").Int()
+	fmt.Println(ageValue) // 输出: 18
 
-// 获取json数组索引值
-v, err := j.Get("mobile").GetArrayIndex(2).Int()
-fmt.printf("%s", v)// 15400012303
+	// 连贯操作获取子级数组索引值, 并转换成int类型
+	mobileIndex2Value, err := j.Get("profile").Get("mobile").GetArrayIndex(1).Int()
+	fmt.Println(mobileIndex2Value) // 输出: 15400000002
+}
 ```
