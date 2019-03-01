@@ -54,10 +54,11 @@ func main() {
 	fmt.Println(mobileIndex2Value) // 输出: 15400000002
 }
 ```
+
 ### json类型对应golang类型
 ```go
 boolean >> bool
-number  >> float64
+number  >> float32,float64,int, int64, uint64
 string  >> string
 null    >> nil
 array   >> []interface{}
