@@ -2,14 +2,22 @@
 
 go语言操作json包
 
-### 文档
+## 文档
 
-### 1. 字符串解析成json, 并获取值
+## 1. 字符串解析成json, 并获取值
 ```go
 j, err := simplejson.NewJson([]byte(jsonStr))
-j.Get("name").String()
-j.Get("profile").Get("age").Int()
-j.Get("profile").Get("mobile").GetArrayIndex(1).Int()
+// 获取json object对象值
+j.Get(key string).String()
+// 获取json 多级object对象值
+j.Get(key string).Get(key string).Int()
+// 获取json array数组索引值
+j.GetArrayIndex(index int).String()
+// 获取json 多级array数组索引值
+j.GetArrayIndex(index int).GetArrayIndex(index int).Int()
+// 获取json 多级数组对象组合键索引值
+j.GetArrayIndex(index int).Get(key string).GetArrayIndex(index int).Int()
+
 ```
 ####  示例
 ```go
@@ -55,15 +63,15 @@ func main() {
 }
 ```
 
-## 设置json对象值
+## 2. 设置json对象值
 
 ```go
 j, err := simplejson.NewJson([]byte(jsonStr))
-j.MustSet(value interface{}, key)
-j.MustSet(value interface{}, index)
-j.MustSet(value interface{}, key1|index1, key2,index2, keyN|indexN)
+j.MustSet(value interface{}, key string)
+j.MustSet(value interface{}, index int)
+j.MustSet(value interface{}, key1 string|index1 index, key2 string,index2 index, keyN string|indexN index)
 ```
-
+### 示例
 ```go
 package main
 
