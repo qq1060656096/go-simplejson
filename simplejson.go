@@ -2,10 +2,6 @@ package simplejson
 
 import "log"
 
-// 对象类型
-type Object map[string] interface{}
-// Array 数组类型
-type Array []interface{}
 
 // Json 操作json对象
 type Json struct {
