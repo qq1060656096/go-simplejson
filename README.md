@@ -6,6 +6,13 @@ go语言操作json包
 
 ### 1. 字符串解析成json, 并获取值
 ```go
+j, err := simplejson.NewJson([]byte(jsonStr))
+j.Get("name").String()
+j.Get("profile").Get("age").Int()
+j.Get("profile").Get("mobile").GetArrayIndex(1).Int()
+```
+####  示例
+```go
 package main
 
 import (
@@ -46,4 +53,13 @@ func main() {
 	mobileIndex2Value, err := j.Get("profile").Get("mobile").GetArrayIndex(1).Int()
 	fmt.Println(mobileIndex2Value) // 输出: 15400000002
 }
+```
+### json类型对应golang类型
+```go
+boolean >> bool
+number  >> float64
+string  >> string
+null    >> nil
+array   >> []interface{}
+object  >> map[string]interface{}
 ```
