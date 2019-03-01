@@ -1,6 +1,10 @@
 package simplejson
 
-import "log"
+import (
+	"errors"
+	"fmt"
+	"log"
+)
 
 
 // Json 操作json对象
@@ -149,4 +153,66 @@ func setArray(arr []interface{}, index int, value interface{}) (interface{}) {
 	}
 	arr[index] = value
 	return arr
+}
+
+// Del 删除json对象键的值, 支持多层键
+func (j *Json) Del(keys... interface{}) error {
+	data, err := delData(j.data, keys...)
+	j.data = data
+	return err
+}
+
+// delData 删除数据键，支持多层键
+func delData(data interface{}, keys ... interface{}) (interface{}, error) {
+	keysLen := len(keys)
+	currKey := keys[0]
+	switch currKey.(type) {
+	case string:// 删除json对象值
+		data, ok := data.(map[string]interface{})
+		// 类型转换失败, 不处理
+		if !ok {
+			return data, errors.New("type assertion to map[string]interface{} failed")
+		}
+		currKey, ok := currKey.(string)
+		currValue, ok := data[currKey]
+		if !ok {
+			return data, errors.New(fmt.Sprintf("map key(%s) not found", currKey))
+		}
+		// 键长度 > 1, 需要递归处理
+		if keysLen > 1 {
+			currValue, err := delData(currValue, keys[1:])
+			data[currKey] = currValue
+			return data, err
+		}
+		// 删除对象键
+		delete(data, currKey)
+		return data, nil
+	case int:// 删除json数组值
+		data, ok := data.([]interface{})
+		// 类型转换失败, 不处理
+		if !ok {
+			return data, errors.New("type assertion to []interface{} failed")
+		}
+		currIndex, ok := currKey.(int)
+		dataLen := len(data)
+		// slices长度 < 1,代表键不存在，不处理
+		if dataLen < 1 {
+			return data, errors.New(fmt.Sprintf("index out of range, current key (%s) data len is zero", currKey))
+		}
+		// 索引超出slices范围不处理
+		if currIndex < 0 || currIndex >= dataLen {
+			return data, errors.New(fmt.Sprintf("index out of range, current index(%v) data len(%v)", currIndex, dataLen))
+		}
+		currValue := data[currIndex]
+		// 键长度 > 1,需要递归处理
+		if keysLen > 1 {
+			currValue, err := delData(currValue, keys[1:]...)
+			data[currIndex] = currValue
+			return data, err
+		}
+		// 删除数组键
+		data = append(data[0:currIndex], data[currIndex+1:]...)
+		return data, nil
+	}
+	return data, errors.New(fmt.Sprintf("Del keys type must string or int, key type is %T", currKey))
 }
