@@ -55,6 +55,68 @@ func main() {
 }
 ```
 
+## 设置json对象值
+
+```go
+j, err := simplejson.NewJson([]byte(jsonStr))
+j.MustSet(value interface{}, key)
+j.MustSet(value interface{}, index)
+j.MustSet(value interface{}, key1|index1, key2,index2, keyN|indexN)
+```
+
+```go
+package main
+
+import (
+	"fmt"
+	"github.com/qq1060656096/go-simplejson"
+)
+
+func main() {
+	jsonStr := `
+{
+	"mobile": [
+		15400000001,
+		15400120302
+	],
+	"uid": 1
+}
+`
+	j, err := simplejson.NewJson([]byte(jsonStr))
+	fmt.Println(err)
+	s0, err := j.EncodeJsonPretty()
+	fmt.Printf("%s\n", s0)
+	// 设置uid值
+	j.MustSet(2, "uid")// uid设置为2
+	s, err := j.EncodeJsonPretty()
+	fmt.Printf("%s\n", s)
+	/*
+{
+  "mobile": [
+    15400000001,
+    15400120302
+  ],
+  "uid": 2
+}
+*/
+	// 设置多层级键的值
+	j.MustSet(25400000002, "mobile", 1)// 设置mobile索引1的值为25400000002
+	s1, err := j.EncodeJsonPretty()
+	fmt.Printf("%s\n", s1)
+	/*
+{
+  "mobile": [
+    15400000001,
+    25400000002
+  ],
+  "uid": 2
+}
+*/
+}
+
+```
+
+
 ### json类型对应golang类型
 ```go
 boolean >> bool
