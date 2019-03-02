@@ -54,8 +54,9 @@ func (j *Json) GetInterface() interface{} {
 
 // MustSet 设置数据
 // keys type 必须是string或者int 否则报错
-func (j *Json) MustSet(value interface{}, keys ...interface{}) {
+func (j *Json) MustSet(value interface{}, keys ...interface{}) *Json {
 	j.data = mustSetData(j.data, value, keys...)
+	return j
 }
 
 // mustSetData 设置数据
@@ -156,12 +157,26 @@ func setArray(arr []interface{}, index int, value interface{}) (interface{}) {
 }
 
 // Del 删除json对象键的值, 支持多层键
+//
+// keys 支持类型支持 int|string
+//
 func (j *Json) Del(keys... interface{}) error {
 	data, err := delData(j.data, keys...)
 	j.data = data
 	return err
 }
 
+// MustDel 删除json对象键的值, 支持多层键,支持连贯操作
+//
+// keys 支持类型支持 int|string, keys 不合法会退出
+func (j *Json) MustDel(keys... interface{}) *Json {
+	data, err := delData(j.data, keys...)
+	if err != nil {
+		log.Panic(err)
+	}
+	j.data = data
+	return j
+}
 // delData 删除数据键，支持多层键
 func delData(data interface{}, keys ... interface{}) (interface{}, error) {
 	keysLen := len(keys)
@@ -180,7 +195,7 @@ func delData(data interface{}, keys ... interface{}) (interface{}, error) {
 		}
 		// 键长度 > 1, 需要递归处理
 		if keysLen > 1 {
-			currValue, err := delData(currValue, keys[1:])
+			currValue, err := delData(currValue, keys[1:]...)
 			data[currKey] = currValue
 			return data, err
 		}

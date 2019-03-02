@@ -236,3 +236,42 @@ func TestJson_Del(t *testing.T) {
 	assert.Equal(t, err, nil)
 }
 
+// 删除json字段, 支持多级键和连贯操作
+func TestJson_MustDel(t *testing.T) {
+	body := jsonStr["userProfile"]
+	j, err := NewJson([]byte(body))
+	j.MustDel("address", "city").MustDel("books", 0, "authors", 1)
+	assert.Equal(t, j.data, map[string]interface{}{
+
+		"id": json.Number("10"),
+		"name": "test4",
+		"age": json.Number("18"),
+		"address": map[string]interface{}{
+			"country": "中国",
+		},
+		"mobile": []interface{}{
+			"15400012301",
+			"15400012302",
+			json.Number("15400012303"),
+		},
+		"books": []interface{}{
+			map[string]interface{}{
+				"bookNo": "book1",
+				"bookName": "c程序设计",
+				"authors": []interface{}{
+					"小明",
+				},
+			},
+			map[string]interface{}{
+				"bookNo": "book2",
+				"bookName": "go程序设计",
+				"authors": []interface{}{
+					"小红",
+					"小黑",
+				},
+			},
+		},
+	},
+	)
+	assert.Equal(t, err, nil)
+}
