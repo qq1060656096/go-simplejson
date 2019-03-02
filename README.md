@@ -64,10 +64,10 @@ j.MustSet(value interface{}, key1 string|index1 int, key2 string,index2 int, key
 ### 5. Json删除值?
 ```go
 j, err := simplejson.NewJson([]byte(jsonStr))
-// 删除json值, 支持多级键删除最后一个键(注意不支持连贯操作)
+// 删除json值, 支持多级键删除最后一个键, 支持连贯操作
 j.Del(key string)
 j.Del(index int)
-j.Del(key1 string|index1 int, key2 string,index2 int, keyN string|indexN int)
+j.Del(key1 string|index1 int, key2 string,index2 int, keyN string|indexN int).Del(key1 string|index1 int, key2 string,index2 int, keyN string|indexN int)
 
 // 删除json字段值, 支持多级键删除最后一个键, 支持连贯操作
 j.MustDel(key string)

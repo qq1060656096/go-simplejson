@@ -160,7 +160,17 @@ func setArray(arr []interface{}, index int, value interface{}) (interface{}) {
 //
 // keys 支持类型支持 int|string
 //
-func (j *Json) Del(keys... interface{}) error {
+func (j *Json) Del(keys... interface{}) *Json {
+	data, _ := delData(j.data, keys...)
+	j.data = data
+	return j
+}
+
+// DelErr 删除json对象键的值, 支持多层键
+//
+// keys 支持类型支持 int|string
+// returns error 返回错误
+func (j *Json) DelErr(keys... interface{}) error {
 	data, err := delData(j.data, keys...)
 	j.data = data
 	return err

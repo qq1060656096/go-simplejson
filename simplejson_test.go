@@ -175,7 +175,7 @@ func TestJson_DelSimpleObject(t *testing.T) {
 	body := jsonStr["simpleObject"]
 	j, err := NewJson([]byte(body))
 	// 删除map键
-	err = j.Del("name")
+	j.Del("name")
 	log.Println(j.data)
 	assert.Equal(t, err, nil)
 	assert.Equal(t, j.data, make(map[string]interface{}))
@@ -187,7 +187,7 @@ func TestJson_DelSimpleArray(t *testing.T) {
 	body := jsonStr["simpleArray"]
 	j, err := NewJson([]byte(body))
 	// 删除数组第2个元素
-	err = j.Del(1)
+	j.Del(1)
 	log.Println(j.data)
 	assert.Equal(t, j.data, []interface{}{"test2.01"})
 	// 删除数据第一个元素
@@ -199,8 +199,7 @@ func TestJson_DelSimpleArray(t *testing.T) {
 func TestJson_Del(t *testing.T) {
 	body := jsonStr["userProfile"]
 	j, err := NewJson([]byte(body))
-	j.Del("address", "city")
-	j.Del("books", 0, "authors", 1)
+	j.Del("address", "city").Del("books", 0, "authors", 1)
 	assert.Equal(t, j.data, map[string]interface{}{
 
 			"id": json.Number("10"),
