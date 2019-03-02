@@ -34,28 +34,21 @@ j.GetArrayIndex(index int).Get(key string).GetArrayIndex(index int).Int()
 j, err := simplejson.NewJson([]byte(jsonStr))
 // 获取json object对象值
 v, err := j.Object()
-
 // 获取json Array数组值
 v, err := j.Array()
 
 // 获取json 字符串值
 v, err := j.String()
-
 // 获取json bool布尔值
 v, err := j.Bool()
-
 // 获取json int整型值
 v, err := j.Int()
-
 // 获取json int64整型值
 v, err := j.Int64()
-
 // 获取json uint64整型值
 v, err := j.Uint64()
-
 // 获取json flat32浮点类型值
 v, err := j.Float32()
-
 // 获取json flat64浮点类型值
 v, err := j.Float64()
 ```
