@@ -1,6 +1,7 @@
 package simplejson
 
 import (
+	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"log"
 	"testing"
@@ -194,3 +195,44 @@ func TestJson_DelSimpleArray(t *testing.T) {
 	assert.Equal(t, j.data, []interface{}{})
 	assert.Equal(t, err, nil)
 }
+// 测试删除json字段值
+func TestJson_Del(t *testing.T) {
+	body := jsonStr["userProfile"]
+	j, err := NewJson([]byte(body))
+	j.Del("address", "city")
+	j.Del("books", 0, "authors", 1)
+	assert.Equal(t, j.data, map[string]interface{}{
+
+			"id": json.Number("10"),
+			"name": "test4",
+			"age": json.Number("18"),
+			"address": map[string]interface{}{
+				"country": "中国",
+			},
+			"mobile": []interface{}{
+				"15400012301",
+				"15400012302",
+				json.Number("15400012303"),
+			},
+			"books": []interface{}{
+				map[string]interface{}{
+					"bookNo": "book1",
+					"bookName": "c程序设计",
+					"authors": []interface{}{
+						"小明",
+					},
+				},
+				map[string]interface{}{
+					"bookNo": "book2",
+					"bookName": "go程序设计",
+					"authors": []interface{}{
+						"小红",
+						"小黑",
+					},
+				},
+			},
+		},
+	)
+	assert.Equal(t, err, nil)
+}
+
