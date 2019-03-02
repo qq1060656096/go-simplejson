@@ -2,6 +2,98 @@
 
 go语言操作json包
 
+## 概览
+---
+### 1. Json解码编码?
+```go
+// json解码
+j, err := simplejson.NewJson([]byte(jsonStr))
+// json漂亮编码
+s, err := j.EncodeJsonPretty()
+// json编码
+s, err1 := j.EncodeJSON()
+```
+
+### 2. Json获取值?
+```go
+j, err := simplejson.NewJson([]byte(jsonStr))
+// 获取json object对象值
+j.Get(key string).String()
+// 获取json 多级object对象值
+j.Get(key string).Get(key string).Int()
+// 获取json array数组索引值
+j.GetArrayIndex(index int).String()
+// 获取json 多级array数组索引值
+j.GetArrayIndex(index int).GetArrayIndex(index int).Int()
+// 获取json 多级数组对象组合键索引值
+j.GetArrayIndex(index int).Get(key string).GetArrayIndex(index int).Int()
+```
+
+### 3. Json获取类型值?
+```go
+j, err := simplejson.NewJson([]byte(jsonStr))
+// 获取json object对象值
+v, err := j.Object()
+
+// 获取json Array数组值
+v, err := j.Array()
+
+// 获取json 字符串值
+v, err := j.String()
+
+// 获取json bool布尔值
+v, err := j.Bool()
+
+// 获取json int整型值
+v, err := j.Int()
+
+// 获取json int64整型值
+v, err := j.Int64()
+
+// 获取json uint64整型值
+v, err := j.Uint64()
+
+// 获取json flat32浮点类型值
+v, err := j.Float32()
+
+// 获取json flat64浮点类型值
+v, err := j.Float64()
+```
+
+### 4. Json设置值?
+```go
+j, err := simplejson.NewJson([]byte(jsonStr))
+// 设置json字段值, 支持多级键, 支持多级键
+j.MustSet(value interface{}, key string)
+j.MustSet(value interface{}, index int)
+j.MustSet(value interface{}, key1 string|index1 int, key2 string,index2 int, keyN string|indexN int)
+j.MustSet(value interface{}, key1 string|index1 int, key2 string,index2 int, keyN string|indexN int).MustSet(value interface{}, key1 string|index1 int, key2 string,index2 int, keyN string|indexN int)
+```
+
+### 5. Json删除值?
+```go
+j, err := simplejson.NewJson([]byte(jsonStr))
+// 删除json值, 支持多级键删除最后一个键(注意不支持连贯操作)
+j.Del(key string)
+j.Del(index int)
+j.Del(key1 string|index1 int, key2 string,index2 int, keyN string|indexN int)
+
+// 删除json字段值, 支持多级键删除最后一个键, 支持连贯操作
+j.MustDel(key string)
+j.MustDel(index int)
+j.MustDel(key1 string|index1 int, key2 string,index2 int, keyN string|indexN int).MustDel(key1 string|index1 int, key2 string,index2 int, keyN string|indexN int)
+```
+
+### 6. json类型对应golang类型?
+```go
+boolean >> bool
+number  >> float32,float64,int, int64, uint64
+string  >> string
+null    >> nil
+array   >> []interface{}
+object  >> map[string]interface{}
+```
+
 ## 文档
 
 ## 1. 字符串解析成json, 并获取值
@@ -124,13 +216,3 @@ func main() {
 
 ```
 
-
-### json类型对应golang类型
-```go
-boolean >> bool
-number  >> float32,float64,int, int64, uint64
-string  >> string
-null    >> nil
-array   >> []interface{}
-object  >> map[string]interface{}
-```
